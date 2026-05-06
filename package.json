@@ -20,6 +20,8 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@opentelemetry/auto-instrumentations-node": "^0.74.0",
+    "@opentelemetry/sdk-node": "^0.216.0",
     "@platformatic/prom-client": "^1.0.0",
     "fastify": "^5.8.5",
     "fastify-metrics": "^13.2.0"

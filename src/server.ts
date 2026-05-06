@@ -1,5 +1,13 @@
 import Fastify from "fastify";
 import metricsPlugin from "fastify-metrics";
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
+
+const sdk = new NodeSDK({
+  instrumentations: [getNodeAutoInstrumentations()],
+});
+
+sdk.start();
 
 const fastify = Fastify({
   logger: {
