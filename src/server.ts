@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import metricsPlugin from "fastify-metrics";
 
 const fastify = Fastify({
   logger: {
@@ -13,36 +14,12 @@ const fastify = Fastify({
   },
 });
 
-// endpoint info log
-fastify.get("/info-log", async (request, reply) => {
-  request.log.info("this is info log");
-  return { message: "Hello World" };
-});
-
-// endpoint debug-log
-fastify.get("/debug-log/:id", async (request, reply) => {
-  const { id } = request.params as { id: string };
-  request.log.debug(`this is debug log: ${id}`);
-
-  return { message: "Hello World" };
-});
-
-// endpoint error-log
-fastify.get("/error-log", async (request, reply) => {
-  request.log.error("this is error log");
-
-  return { message: "Hello World" };
+fastify.register(metricsPlugin.default, {
+  endpoint: "/metrics",
 });
 
 // endpoint warn-log
-fastify.get("/warn-log", async (request, reply) => {
-  request.log.warn("this is warn log");
-
-  return { message: "Hello World" };
-});
-
-// endpoint warn-log
-fastify.get("/all-log", async (request, reply) => {
+fastify.get("/logs", async (request, reply) => {
   request.log.info("this is info log");
   request.log.debug("this is debug log");
   request.log.error("this is error log");
