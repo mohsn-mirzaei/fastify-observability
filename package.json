@@ -20,7 +20,9 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/auto-instrumentations-node": "^0.74.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.217.0",
     "@opentelemetry/sdk-node": "^0.216.0",
     "@platformatic/prom-client": "^1.0.0",
     "fastify": "^5.8.5",
