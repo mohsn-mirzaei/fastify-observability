@@ -13,11 +13,19 @@ const fastify = Fastify({
   logger: {
     level: "info", // trace, debug, info, warn, error
     transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
+      targets: [
+        {
+          target: "pino-pretty",
+          options: {
+            translateTime: "HH:MM:ss Z",
+            ignore: "pid,hostname",
+          },
+        },
+        {
+          target: "pino/file",
+          options: { destination: "./logs/app.log" },
+        },
+      ],
     },
   },
 });
