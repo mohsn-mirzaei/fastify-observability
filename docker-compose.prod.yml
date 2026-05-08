@@ -18,7 +18,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-      start_period: 5s
+      start_period: 10s
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus:v3.0.0
@@ -26,6 +27,7 @@ services:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
+    restart: unless-stopped
 
   grafana:
     image: grafana/grafana:11.4.0
@@ -34,12 +36,18 @@ services:
     volumes:
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+    restart: unless-stopped
 
   loki:
     image: grafana/loki:3.0.0
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
 
   tempo:
     image: grafana/tempo:2.4.1
@@ -49,3 +57,4 @@ services:
     ports:
       - "4318:4318"
       - "3200:3200"
+    restart: unless-stopped

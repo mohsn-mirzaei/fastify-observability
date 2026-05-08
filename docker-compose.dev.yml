@@ -1,16 +1,19 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: node:22-alpine
+    working_dir: /app
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       HOST: 0.0.0.0
       PORT: 3000
       LOG_MODE: json
-      LOG_LEVEL: info
+      LOG_LEVEL: debug
       LOKI_PUSH_URL: http://loki:3100
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318/v1/traces
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    volumes:
+      - ./:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
     healthcheck:
@@ -18,7 +21,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-      start_period: 5s
+      start_period: 10s
 
   prometheus:
     image: prom/prometheus:v3.0.0
@@ -34,6 +37,10 @@ services:
     volumes:
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
 
   loki:
     image: grafana/loki:3.0.0
